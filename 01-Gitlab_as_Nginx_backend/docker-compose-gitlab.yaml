@@ -18,7 +18,13 @@ services:
       - gitlab-data:/var/opt/gitlab # 永続ストレージ
       - gitlab-logs:/var/log/gitlab
       - gitlab-config:/etc/gitlab
+    networks: 
+      - devops_net
 
+networks:
+  devops_net:
+    external: true  # 既に作成されたネットワークを使用する場合
+    
 volumes:
   gitlab-data:
   gitlab-logs:
