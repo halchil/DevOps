@@ -3,5 +3,9 @@
 # 事前準備
 
 ```
-docker 
+[実行コマンド]
+docker network create --subnet=172.10.10.0/24 --gateway=172.10.10.1 ecosystem
+
+[確認コマンド]
+docker network list
 ```

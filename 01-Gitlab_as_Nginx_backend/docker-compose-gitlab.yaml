@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    hostname: 'gitlab.example.com' # GitLabのホスト名を指定
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.example.com' # GitLabの外部URL
+      #  gitlab_rails['gitlab_shell_ssh_port'] = 2222 # SSHポートの設定
+    ports:
+      #- '80:80'      # HTTPポート
+      #- '443:443'    # HTTPSポート
+      #- '2222:22'    # SSHポート\
+      - '8929:8929'  
+    volumes:
+      - gitlab-data:/var/opt/gitlab # 永続ストレージ
+      - gitlab-logs:/var/log/gitlab
+      - gitlab-config:/etc/gitlab
+
+volumes:
+  gitlab-data:
+  gitlab-logs:
+  gitlab-config:
