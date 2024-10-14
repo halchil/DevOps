@@ -24,7 +24,7 @@ services:
 
 networks:
   devops_net:
-    external: true  # 既に作成されたネットワークを使用する場合
+    external: true
     
 volumes:
   gitlab-data:

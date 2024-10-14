@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: always
+    ports:
+      - "8080:8080"   # JenkinsのデフォルトWebインターフェースポート
+      - "50000:50000" # Jenkinsエージェントとの通信ポート
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false # 初回セットアップウィザードのスキップ
+    networks: 
+      - devops_net
+
+networks:
+  devops_net:
+    external: true
+
+volumes:
+  jenkins_home:

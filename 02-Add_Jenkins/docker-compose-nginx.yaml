@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks: 
+      - devops_net
+
+networks:
+  devops_net:
+    external: true  # 既に作成されたネットワークを使用する場合
