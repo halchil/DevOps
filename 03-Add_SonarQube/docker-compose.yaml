@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.example.com' # GitLabのホスト名を指定
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.example.com' # GitLabの外部URL
+      #  gitlab_rails['gitlab_shell_ssh_port'] = 2222 # SSHポートの設定
+    ports:
+      #- '80:80'      # HTTPポート
+      #- '443:443'    # HTTPSポート
+      #- '2222:22'    # SSHポート\
+      - '8929:8929'  
+    volumes:
+      - gitlab-data:/var/opt/gitlab # 永続ストレージ
+      - gitlab-logs:/var/log/gitlab
+      - gitlab-config:/etc/gitlab
+    networks: 
+      - devops_net
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: always
+    ports:
+      - "8080:8080"   # JenkinsのデフォルトWebインターフェースポート
+      - "50000:50000" # Jenkinsエージェントとの通信ポート
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    #environment:
+    #  - JAVA_OPTS=-Djenkins.install.runSetupWizard=false # 初回セットアップウィザードのスキップ
+    networks: 
+      - devops_net
+    depends_on:
+      - gitlab # GitLabが先に起動している必要がある場合
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks: 
+      - devops_net
+    depends_on:
+      - gitlab # GitLabが先に起動している必要がある場合
+
+networks:
+  devops_net:
+    external: true
+    
+volumes:
+  gitlab-data:
+  gitlab-logs:
+  gitlab-config:
+  jenkins_home:
